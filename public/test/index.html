@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>service workers</title>
+        <meta charset="utf-8"></head>
+        <script src="index.js?ver=1"></script>
+        <script src="../jquery.min.js"></script>
+    </head> 
+    <body>
+        点击页面触发请求
+        <!-- <img src="//img3.csmall.com/webPublicity//0/5aa5d479dae09.jpg"/> -->
+        <script>
+            navigator.serviceWorker.addEventListener('message', event => {
+                let {result,url} = event.data;
+                if(url === 'http://baidu.com/'){
+                    console.log("从indexDB获取的数据",result);
+                    serviceWorker.test(result);
+                }
+            }); 
+            let serviceWorker = {
+                test: function(data){
+                    console.log(`从http://baidu.com获取数据：${data}`)
+                }
+            };
+            $(function(){
+                $('html').on('click',function(){
+                    $.ajax({
+                        url: 'http://baidu.com',
+                        data: { },
+                        success: function(res){
+                            serviceWorker.test(res);
+                        }
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src="./jquery.min.js"></script>
+        <script src="indexDB.js"></script>
+    </head>
+    <body>
+        <p><a href="/test/index.html">service workers1</a></p>
+        <p><a href="/sw-test/index.html">service workers2</a></p>
+        <button data-type="insert">新增数据</button>
+        <button data-type="delete">删除数据</button>
+        <button data-type="update">修改数据</button>
+        <button data-type="select">获取数据</button>
+        <script>
+            const myDB = {
+                name:'testDB',
+                version:1,
+                db:null,
+                ojstore:{
+                    name:'students',//存储空间表的名字
+                    keypath:'id'//主键
+                }
+            };
+            let db = new DB(myDB);
+                
+            db.open();
+
+            $('button').on('click',function(){
+                let type = $(this).data('type');
+                if(type === 'insert'){
+                    let data = [
+                        {id:1, name:'freddy', age:23 },
+                        {id:2, name:'nick', age:25 }
+                    ];
+                    db.add(data).then((e)=>{
+                        console.log(e)
+                    },(e)=>{
+                        console.log(e)
+                    })
+                }else if(type === 'delete'){
+                    db.deleteIndex(2).then((e)=>{
+                        console.log(e)
+                    })
+                }else if(type === 'update'){
+                    db.put({ id: 1, name: 'newFreddy', age: 23}).then((e)=>{
+                        console.log(e)
+                    })
+                }else if(type === 'select'){
+                    db.readAll().then((e)=>{
+                        console.log(e.result)
+                    }) 
+                }
+                
+            })
+        </script>
+    </body>
+</html>
